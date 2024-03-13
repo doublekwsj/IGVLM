@@ -1,6 +1,7 @@
 from .base_model_inference import *
 import requests
 import sys, os
+from PIL import Image
 
 
 class GPT4Inference(BaseModelInference):
