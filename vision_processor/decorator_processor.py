@@ -2,6 +2,7 @@ import pickle
 import base64
 import os
 from io import BytesIO
+from PIL import Image
 
 
 def save_to_bytes(func):

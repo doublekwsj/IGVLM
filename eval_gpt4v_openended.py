@@ -30,18 +30,18 @@ def infer_and_eval_model(args):
 
     print("loading model")
 
-    llavaPipeline = Gpt4Pipeline(
+    gpt4vPipeline = Gpt4Pipeline(
         path_qa,
         path_video,
         dir=path_result_dir,
     )
-    llavaPipeline.set_component(
+    gpt4vPipeline.set_component(
         api_key,
         system_prompt,
         user_prompt,
         frame_fixed_number=frame_fixed_number,
     )
-    df_merged, path_df_merged = llavaPipeline.do_pipeline()
+    df_merged, path_df_merged = gpt4vPipeline.do_pipeline()
 
     print("GPT-4V prediction result : " + path_df_merged)
     print("start gpt3-evaluation")
