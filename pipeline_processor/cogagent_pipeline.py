@@ -9,20 +9,19 @@ import os
 import sys
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from model_processor.llava2_model_processor import *
+from model_processor.cogagent_model_processor import *
 from vision_processor.fps_gridview_processor import *
 from .record import *
 
 
-class LlavaPipeline:
+class CogagentPipeline:
     def __init__(
         self,
-        model_name,
         path_qa,
         path_video_file_format,
-        dir="./llava_pipeline_result/",
+        dir="./cogagent_pipeline_result/",
     ):
-        self.model_name = "liuhaotian/" + model_name
+        self.model_name = "THUDM/cogagent-vqa-hf"
         self.path_qa = path_qa
         self.path_dir = dir
         self.path_result = dir
@@ -38,7 +37,7 @@ class LlavaPipeline:
         )
 
     def load_model(self):
-        self.model = Llava2Processor(self.model_name)
+        self.model = CogAgentProcessor(self.model_name)
         self.model.load_model()
 
     def set_component(
@@ -149,7 +148,7 @@ class LlavaPipeline:
         return self.df_qa, path_merged
 
     def reset_pipeline(
-        self, path_qa, path_video_file_format, dir="./llava_pipeline_result/"
+        self, path_qa, path_video_file_format, dir="./cogagent_pipeline_result/"
     ):
         self.path_qa = path_qa
         self.path_video_file_format = path_video_file_format

@@ -9,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from vision_processor.fps_gridview_processor import *
 
+from pipeline_processor.cogagent_pipeline import *
 from pipeline_processor.gpt4_pipeline import *
 from evaluation.gpt3_evaluation_utils import *
 
@@ -19,25 +20,23 @@ def infer_and_eval_model(args):
     path_result_dir = args.path_result
     api_key = args.api_key
 
-    system_prompt, user_prompt = get_prompt()
+    user_prompt = get_prompt()
     frame_fixed_number = 6
 
-    print("loading model")
+    print("loading CogAgent")
 
-    gpt4vPipeline = Gpt4Pipeline(
+    cogagentPipeline = CogagentPipeline(
         path_qa,
         path_video,
         dir=path_result_dir,
     )
-    gpt4vPipeline.set_component(
-        api_key,
-        system_prompt,
+    cogagentPipeline.set_component(
         user_prompt,
         frame_fixed_number=frame_fixed_number,
     )
-    df_merged, path_df_merged = gpt4vPipeline.do_pipeline()
+    df_merged, path_df_merged = cogagentPipeline.do_pipeline()
 
-    print("GPT-4V prediction result : " + path_df_merged)
+    print("cogagent prediction result : " + path_df_merged)
     print("start gpt3-evaluation")
 
     gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation")
@@ -52,10 +51,9 @@ def infer_and_eval_model(args):
     print("Score : %s" % (str(score)))
 
 
-def get_prompt():
-    system_prompt = ""
-    user_prompt = "The provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s?"
-    return system_prompt, user_prompt
+def get_prompt(llm_size):
+    user_prompt = "USER: <img><Image></img>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? \nAnswer: In the video,"
+    return user_prompt
 
 
 def validate_video_path(filename):
@@ -90,7 +88,7 @@ if __name__ == "__main__":
         "--api_key",
         type=str,
         required=True,
-        help="api key for gpt-4v and gpt-3 evaluation",
+        help="api key for gpt-3 evaluation",
     )
     args = parser.parse_args()
 

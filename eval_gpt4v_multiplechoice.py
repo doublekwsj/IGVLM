@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from vision_processor.fps_gridview_processor import *
 
 from pipeline_processor.gpt4_pipeline import *
-from evaluation.gpt3_evaluation_utils import *
+from evaluation.direct_answer_eval import *
 
 
 def infer_and_eval_model(args):
@@ -21,6 +21,28 @@ def infer_and_eval_model(args):
 
     system_prompt, user_prompt = get_prompt()
     frame_fixed_number = 6
+
+    # NExT-QA, TVQA, IntentQA, EgoSchema
+    func_user_prompt = lambda prompt, row: prompt % (
+        row["question"],
+        row["a0"],
+        row["a1"],
+        row["a2"],
+        row["a3"],
+        row["a4"],
+    )
+
+    # In case of STAR benchamrk, use the following codes and select prompt according to llm size.
+    """
+    func_user_prompt = lambda prompt, row: prompt % (
+        row["question"],
+        row["a0"],
+        row["a1"],
+        row["a2"],
+        row["a3"],
+    )
+    user_prompt = "The provided image arranges key frames from a video in a grid view. They are arranged in chronological order, holding temporal information from the top left to the bottom right. You need to choose one of the following five options to answer the question, '%s?' : 0.'%s', 1.'%s', 2.'%s', 3.'%s'. Please provide a single-number answer (0, 1, 2, 3 or 4) to the multiple-choice question, and your answer must be one of the letters (0, 1, 2 or 3). Your response must only contain one number without any string."
+    """
 
     print("loading model")
 
@@ -34,27 +56,19 @@ def infer_and_eval_model(args):
         system_prompt,
         user_prompt,
         frame_fixed_number=frame_fixed_number,
+        func_user_prompt=func_user_prompt,
     )
     df_merged, path_df_merged = gpt4vPipeline.do_pipeline()
 
-    print("GPT-4V prediction result : " + path_df_merged)
-    print("start gpt3-evaluation")
+    print("llava prediction result : " + path_df_merged)
+    print("start multiple-choice evaluation")
 
-    gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation")
-
-    df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key)
-
-    print("Gpt-3-evaluation file : " + path_merged)
-    yes_count = df_qa[df_qa["gpt3_pred"] == "yes"].shape[0]
-    score = df_qa["gpt3_score"].mean()
-
-    print("Acc : %s" % (str(yes_count / df_qa.shape[0])))
-    print("Score : %s" % (str(score)))
+    eval_multiple_choice(df_merged)
 
 
 def get_prompt():
     system_prompt = ""
-    user_prompt = "The provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s?"
+    user_prompt = "The provided image arranges key frames from a video in a grid view. They are arranged in chronological order, holding temporal information from the top left to the bottom right. You need to choose one of the following five options to answer the question, '%s?' : 0.'%s', 1.'%s', 2.'%s', 3.'%s', 4.'%s'. Please provide a single-number answer (0, 1, 2, 3 or 4) to the multiple-choice question, and your answer must be one of the letters (0, 1, 2, 3 or 4). Your response must only contain one number without any string."
     return system_prompt, user_prompt
 
 
@@ -90,8 +104,9 @@ if __name__ == "__main__":
         "--api_key",
         type=str,
         required=True,
-        help="api key for gpt-4v and gpt-3 evaluation",
+        help="api key for gpt-4v",
     )
+
     args = parser.parse_args()
 
     infer_and_eval_model(args)

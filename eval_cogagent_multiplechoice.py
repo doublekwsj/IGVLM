@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from vision_processor.fps_gridview_processor import *
 
-from pipeline_processor.llava_pipeline import *
+from pipeline_processor.cogagent_pipeline import *
 from pipeline_processor.gpt4_pipeline import *
 from evaluation.direct_answer_eval import *
 
@@ -18,9 +18,8 @@ def infer_and_eval_model(args):
     path_qa = args.path_qa_pair_csv
     path_video = args.path_video
     path_result_dir = args.path_result
-    llm_size = args.llm_size
 
-    model_name, user_prompt = get_llava_and_prompt(llm_size)
+    user_prompt = get_prompt()
     frame_fixed_number = 6
 
     # NExT-QA, TVQA, IntentQA, EgoSchema
@@ -48,41 +47,29 @@ def infer_and_eval_model(args):
     prompt = "<|im_start|>system\n Select correct option to answer the question.<|im_end|>\n<|im_start|>user\n <image>\n Question: %s? A:%s. B:%s. C:%s. D:%s. Select the correct answer from the options. <|im_end|>\n<|im_start|>assistant\nAnswer:"
     """
 
-    print("loading [%s]" % (model_name))
+    print("loading CogAgent")
 
-    llavaPipeline = LlavaPipeline(
-        model_name,
+    cogagentPipeline = CogagentPipeline(
         path_qa,
         path_video,
         dir=path_result_dir,
     )
-    llavaPipeline.set_component(
+    cogagentPipeline.set_component(
         user_prompt,
         frame_fixed_number=frame_fixed_number,
         func_user_prompt=func_user_prompt,
     )
-    df_merged, path_df_merged = llavaPipeline.do_pipeline()
+    df_merged, path_df_merged = cogagentPipeline.do_pipeline()
 
-    print("llava prediction result : " + path_df_merged)
+    print("cogagent prediction result : " + path_df_merged)
     print("start multiple-choice evaluation")
 
     eval_multiple_choice(df_merged)
 
 
-def get_llava_and_prompt(llm_size):
-    if llm_size in ["7b", "13b"]:
-        prompt = "USER: <image>\nThe provided image arranges keyframes from a video in a grid view. Question: %s?\n A:%s. B:%s. C:%s. D:%s. E:%s. \n Select the correct answer from the options(A,B,C,D,E). \nASSISTANT: \nAnswer:"
-        model_name = "llava-v1.6-vicuna-%s" % (llm_size)
-    else:
-        prompt = "<|im_start|>system\n Select correct option to answer the question.<|im_end|>\n<|im_start|>user\n <image>\n Question: %s? A:%s. B:%s. C:%s. D:%s. E: %s. Select the correct answer from the options. <|im_end|>\n<|im_start|>assistant\nAnswer:"
-        model_name = "llava-v1.6-%s" % (llm_size)
-    return model_name, prompt
-
-
-def validate_llm_size(type_llm_size):
-    if type_llm_size not in {"7b", "13b", "34b"}:
-        raise argparse.ArgumentTypeError(f"No valid LLM size.")
-    return type_llm_size
+def get_prompt():
+    user_prompt = "USER: <img><Image></img>\nThe provided image arranges key frames from a video in a grid view. Question: %s? A:%s. B:%s. C:%s. D:%s. E:%s.\n Select the correct answer from the options(A,B,C,D,E). \nASSISTANT: \nAnswer:"
+    return user_prompt
 
 
 def validate_video_path(filename):
@@ -111,13 +98,6 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--path_result", type=str, required=True, help="path of output directory"
-    )
-
-    parser.add_argument(
-        "--llm_size",
-        type=validate_llm_size,
-        default="7b",
-        help="You can choose llm size of LLaVA. 7b | 13b | 34b",
     )
 
     args = parser.parse_args()

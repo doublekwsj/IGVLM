@@ -14,16 +14,6 @@ from pipeline_processor.gpt4_pipeline import *
 from evaluation.gpt3_evaluation_utils import *
 
 
-def get_llava_and_prompt(llm_size):
-    if llm_size in ["7b", "13b"]:
-        prompt = "USER: <image>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? \nASSISTANT:\nAnswer: In the video,"
-        model_name = "llava-v1.6-vicuna-%s" % (llm_size)
-    else:
-        prompt = "<|im_start|>system\n Answer the question. <|im_end|>\n<|im_start|>user\n <image>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? <|im_end|>\n<|im_start|>assistant\nAnswer: In the video,"
-        model_name = "llava-v1.6-%s" % (llm_size)
-    return model_name, prompt
-
-
 def infer_and_eval_model(args):
     path_qa = args.path_qa_pair_csv
     path_video = args.path_video
@@ -61,6 +51,16 @@ def infer_and_eval_model(args):
 
     print("Acc : %s" % (str(yes_count / df_qa.shape[0])))
     print("Score : %s" % (str(score)))
+
+
+def get_llava_and_prompt(llm_size):
+    if llm_size in ["7b", "13b"]:
+        prompt = "USER: <image>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? \nASSISTANT:\nAnswer: In the video,"
+        model_name = "llava-v1.6-vicuna-%s" % (llm_size)
+    else:
+        prompt = "<|im_start|>system\n Answer the question. <|im_end|>\n<|im_start|>user\n <image>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? <|im_end|>\n<|im_start|>assistant\nAnswer: In the video,"
+        model_name = "llava-v1.6-%s" % (llm_size)
+    return model_name, prompt
 
 
 def validate_llm_size(type_llm_size):
