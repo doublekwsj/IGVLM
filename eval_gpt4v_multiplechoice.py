@@ -63,7 +63,7 @@ def infer_and_eval_model(args):
     print("llava prediction result : " + path_df_merged)
     print("start multiple-choice evaluation")
 
-    eval_multiple_choice(df_merged)
+    eval_multiple_choice_gpt(df_merged)
 
 
 def get_prompt():

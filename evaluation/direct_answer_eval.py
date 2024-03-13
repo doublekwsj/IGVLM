@@ -45,3 +45,34 @@ def map_prediction_to_answer_v2(row):
     elif answer_column:
         print(prediction_letter)
     return "None"
+
+
+def eval_multiple_choice_gpt(df):
+    df["predicted_answer"] = df.apply(map_prediction_to_answer_gpt, axis=1)
+    df["is_correct"] = df["predicted_answer"] == df["answer"]
+    total_accuracy = df["is_correct"].mean()
+
+    # Print total accuracy
+    print(f"Total Accuracy: {total_accuracy:.4f}")
+
+    # Step 4: Report group by question_type
+    accuracy_report = df.groupby("question_type")["is_correct"].mean()
+    print(accuracy_report)
+
+    if "question_type" in df.columns:
+        df["prefix"] = df["question_type"].apply(lambda x: x[0])
+        grouped_accuracy = df.groupby("prefix")["is_correct"].mean()
+        print(grouped_accuracy)
+
+
+def map_prediction_to_answer_gpt(row):
+    answer_column = None
+    if isinstance(row["pred"], str):
+        prediction_letter = row["pred"][0]
+        if prediction_letter in ["0", "1", "2", "3", "4"]:
+            answer_column = "a" + str(prediction_letter)
+    if answer_column in ["a0", "a1", "a2", "a3", "a4"]:
+        return row[answer_column]
+    elif answer_column:
+        print(prediction_letter)
+    return "None"
