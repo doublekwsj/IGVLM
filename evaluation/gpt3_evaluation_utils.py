@@ -10,7 +10,6 @@ import pandas as pd
 from pipeline_processor.record import *
 
 
-"""
 def process_gpt3_evaluation_v2(
     row, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT
 ):
@@ -32,7 +31,6 @@ def process_gpt3_evaluation_v2(
             f.write(response_message)
     else:
         print("exist")
-"""
 
 
 def process_gpt3_evaluation(
@@ -59,7 +57,9 @@ def process_gpt3_evaluation(
 
 def eval_gpt3(df_merged, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT):
     for idx, row in df_merged.iterrows():
-        process_gpt3_evaluation(row, path_result, api_key, gpt_eval_type=gpt_eval_type)
+        process_gpt3_evaluation_v2(
+            row, path_result, api_key, gpt_eval_type=gpt_eval_type
+        )
 
     if not os.path.exists(path_result + "result.csv"):
         df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
