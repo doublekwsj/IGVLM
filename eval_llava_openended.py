@@ -42,7 +42,9 @@ def infer_and_eval_model(args):
 
     print("loading [%s]" % (model_name))
 
-    llavaPipeline = LlavaPipeline(path_qa, path_video, dir=path_result_dir)
+    llavaPipeline = LlavaPipeline(
+        path_qa, path_video, dir=path_result_dir, path_video_file_format=path_video
+    )
     llavaPipeline.set_component(
         user_prompt,
         func_user_prompt=func_user_prompt,
