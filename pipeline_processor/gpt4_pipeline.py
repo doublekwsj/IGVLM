@@ -59,6 +59,15 @@ class Gpt4Pipeline:
         for idx, row in tqdm(self.df_qa.iterrows()):
             question_id = str(row["question_id"])
             video_path = row["path_video"]
+            video_extensions = ["avi", "mp4", "mkv", "webm", "gif"]
+
+            if not os.path.exists(video_path):
+                base_video_path, _ = os.path.splitext(video_path)
+                for ext in video_extensions:
+                    temp_path = f"{base_video_path}.{ext}"
+                    if os.path.exists(temp_path):
+                        video_path = temp_path
+                        break
 
             if not os.path.exists(self._make_file_path(question_id)):
                 try:

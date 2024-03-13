@@ -73,7 +73,7 @@ class LlavaPipeline:
             question_id = str(row["question_id"])
             video_path = row["path_video"]
             ts = row["ts"] if "ts" in row else None
-            video_extensions = ["avi", "mp4", "mkv", "webm"]
+            video_extensions = ["avi", "mp4", "mkv", "webm", "gif"]
 
             if not os.path.exists(video_path):
                 base_video_path, _ = os.path.splitext(video_path)

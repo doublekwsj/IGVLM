@@ -56,7 +56,7 @@ def infer_and_eval_model(args):
 
     print("start gpt3-evaluation")
 
-    gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation/")
+    gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation")
 
     df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key)
 

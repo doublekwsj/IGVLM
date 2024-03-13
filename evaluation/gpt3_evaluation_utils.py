@@ -1,13 +1,30 @@
 import math
 import os
 import glob
-from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 import concurrent
 import openai
 import pandas as pd
 
 from pipeline_processor.record import *
+
+
+def eval_gpt3(df_merged, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT):
+
+    os.makedirs(path_result, exist_ok=True)
+
+    for idx, row in df_merged.iterrows():
+        process_gpt3_evaluation_v2(
+            row, path_result, api_key, gpt_eval_type=gpt_eval_type
+        )
+
+    if not os.path.exists(path_result + "result.csv"):
+        df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
+        return df_qa, path_merged
+    else:
+        path_merged_already = path_result + "result.csv"
+        df_already = pd.read_csv(path_merged_already, index_col=0)
+        return df_already, path_merged_already
 
 
 def process_gpt3_evaluation_v2(
@@ -31,43 +48,6 @@ def process_gpt3_evaluation_v2(
             f.write(response_message)
     else:
         print("exist")
-
-
-def process_gpt3_evaluation(
-    row, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT
-):
-    api_key = api_key
-    file_path_saved = os.path.join(path_result, str(row["question_id"]) + ".txt")
-    if not os.path.exists(file_path_saved):
-        question = row["question"]
-        answer = row["answer"]
-        pred = row["pred"]
-        message = make_messages(question, answer, pred, gpt_eval_type)
-        openai.api_key = api_key
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=message
-        )
-        response_message = completion["choices"][0]["message"]["content"]
-
-        with open(file_path_saved, "w") as f:
-            f.write(response_message)
-    else:
-        print("exist")
-
-
-def eval_gpt3(df_merged, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT):
-    for idx, row in df_merged.iterrows():
-        process_gpt3_evaluation_v2(
-            row, path_result, api_key, gpt_eval_type=gpt_eval_type
-        )
-
-    if not os.path.exists(path_result + "result.csv"):
-        df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
-        return df_qa, path_merged
-    else:
-        path_merged_already = path_result + "result.csv"
-        df_already = pd.read_csv(path_merged_already, index_col=0)
-        return df_already, path_merged_already
 
 
 def merge_qa_and_answer(df_qa, path_result):
@@ -106,47 +86,6 @@ def merge_qa_and_answer(df_qa, path_result):
     print(df_qa["gpt3_score"].describe())
 
     return df_qa, path_merged
-
-
-# 메인 함수: 병렬 처리를 관리
-def gpt3_parallel_processing(
-    df_merged,
-    path_result,
-    num_core,
-    api_key,
-    gpt_eval_type=EvaluationType.DEFAULT,
-    evaluation_method=process_gpt3_evaluation,
-):
-    # 프로세스 풀 실행자를 사용하여 작업 분할
-    print("input : " + str(len(df_merged)))
-    print("path : " + path_result)
-    print("core : " + str(num_core))
-
-    os.makedirs(path_result, exist_ok=True)
-
-    if not os.path.exists(path_result + "result.csv"):
-
-        with ProcessPoolExecutor(max_workers=num_core) as executor:
-            futures = [
-                executor.submit(
-                    evaluation_method, row, path_result, api_key, gpt_eval_type
-                )
-                for idx, row in df_merged.iterrows()
-            ]
-
-            # 진행 상태를 tqdm으로 표시
-            for _ in tqdm(
-                concurrent.futures.as_completed(futures), total=len(df_merged)
-            ):
-                pass
-
-        df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
-        return df_qa, path_merged
-
-    else:
-        path_merged_already = path_result + "result.csv"
-        df_already = pd.read_csv(path_merged_already, index_col=0)
-        return df_already, path_merged_already
 
 
 def make_messages(question, answer, pred, gpt_eval_type):
