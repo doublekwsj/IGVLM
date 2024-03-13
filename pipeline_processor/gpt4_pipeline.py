@@ -54,7 +54,7 @@ class Gpt4Pipeline:
 
         self._make_directory(extra_dir)
 
-    def do_pipeline(self, do_parallel=False):
+    def do_pipeline(self):
 
         for idx, row in tqdm(self.df_qa.iterrows()):
             question_id = str(row["question_id"])
@@ -87,8 +87,7 @@ class Gpt4Pipeline:
                     print(e)
                     print(video_path)
                     continue
-        if not do_parallel:
-            return self.merge_qa_and_answer()
+        return self.merge_qa_and_answer()
 
     def write_result_file(self, question_id, answer, extension=".txt"):
         file_path = self._make_file_path(question_id, extension)
