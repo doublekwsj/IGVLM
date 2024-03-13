@@ -2,6 +2,7 @@ tqdm
 openai
 mlflow
 moviepy
+timm
 opencv-python==4.8.0.74
 opencv-contrib-python==4.8.0.74
 transformers==4.36.2
