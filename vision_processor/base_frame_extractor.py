@@ -61,12 +61,3 @@ class BaseFrameExtractor(ABC):
     @save_to_base64
     def _save_data_to_base64(self, data):
         return data
-
-
-def main():
-    tmp = BaseFrameExtractor(["example", "QzulzuWr0Zw_20_45.avi"])
-    print(tmp.video_path)
-
-
-if __name__ == "__main__":
-    main()
