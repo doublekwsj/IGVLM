@@ -37,7 +37,6 @@ def infer_and_eval_model(args):
     print(model_name)
     print(user_prompt)
 
-    func_user_prompt = lambda prompt, row: prompt % (row["question"])
     frame_fixed_number = 6
 
     print("loading [%s]" % (model_name))
@@ -50,7 +49,6 @@ def infer_and_eval_model(args):
     )
     llavaPipeline.set_component(
         user_prompt,
-        func_user_prompt=func_user_prompt,
         frame_fixed_number=frame_fixed_number,
     )
     df_merged, path_df_merged = llavaPipeline.do_pipeline()
@@ -60,9 +58,7 @@ def infer_and_eval_model(args):
     api_key = ""
     gpt3_dir = path_result_dir + "results_gpt3_evaluation/"
 
-    df_qa, path_merged = gpt3_parallel_processing(
-        df_merged, gpt3_dir, num_core_eval, api_key
-    )
+    df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key)
 
     print("final file path : " + path_merged)
     print(df_qa.head())

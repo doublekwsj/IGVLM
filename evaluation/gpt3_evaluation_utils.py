@@ -10,6 +10,7 @@ import pandas as pd
 from pipeline_processor.record import *
 
 
+"""
 def process_gpt3_evaluation_v2(
     row, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT
 ):
@@ -31,6 +32,7 @@ def process_gpt3_evaluation_v2(
             f.write(response_message)
     else:
         print("exist")
+"""
 
 
 def process_gpt3_evaluation(
@@ -53,6 +55,19 @@ def process_gpt3_evaluation(
             f.write(response_message)
     else:
         print("exist")
+
+
+def eval_gpt3(df_merged, path_result, api_key, gpt_eval_type=EvaluationType.DEFAULT):
+    for idx, row in df_merged.iterrows():
+        process_gpt3_evaluation(row, path_result, api_key, gpt_eval_type=gpt_eval_type)
+
+    if not os.path.exists(path_result + "result.csv"):
+        df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
+        return df_qa, path_merged
+    else:
+        path_merged_already = path_result + "result.csv"
+        df_already = pd.read_csv(path_merged_already, index_col=0)
+        return df_already, path_merged_already
 
 
 def merge_qa_and_answer(df_qa, path_result):
@@ -124,19 +139,7 @@ def gpt3_parallel_processing(
                 concurrent.futures.as_completed(futures), total=len(df_merged)
             ):
                 pass
-        with ProcessPoolExecutor(max_workers=num_core) as executor:
-            futures = [
-                executor.submit(
-                    evaluation_method, row, path_result, api_key, gpt_eval_type
-                )
-                for idx, row in df_merged.iterrows()
-            ]
 
-            # 진행 상태를 tqdm으로 표시
-            for _ in tqdm(
-                concurrent.futures.as_completed(futures), total=len(df_merged)
-            ):
-                pass
         df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
         return df_qa, path_merged
 
