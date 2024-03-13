@@ -1,0 +1,10 @@
+tqdm
+openai
+mlflow
+moviepy
+opencv-python==4.8.0.74
+opencv-contrib-python==4.8.0.74
+transformers==4.36.2
+transformers-stream-generator==0.0.4
+torch==2.2.0
+bitsandbytes==0.42.0
