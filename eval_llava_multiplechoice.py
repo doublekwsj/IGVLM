@@ -43,7 +43,7 @@ def infer_and_eval_model(args):
         row["a4"],
     )
 
-    # STAR
+    # In case of STAR benchamrk, use the following codes and select prompt according to llm size.
     """
     func_user_prompt = lambda prompt, row: prompt % (
         row["question"],
