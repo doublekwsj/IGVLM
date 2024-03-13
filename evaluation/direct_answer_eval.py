@@ -10,10 +10,9 @@ def eval_multiple_choice(df):
     print(f"Total Accuracy: {total_accuracy:.4f}")
 
     # Step 4: Report group by question_type
-    accuracy_report = df.groupby("question_type")["is_correct"].mean()
-    print(accuracy_report)
-
     if "question_type" in df.columns:
+        accuracy_report = df.groupby("question_type")["is_correct"].mean()
+        print(accuracy_report)
         df["prefix"] = df["question_type"].apply(lambda x: x[0])
         grouped_accuracy = df.groupby("prefix")["is_correct"].mean()
         print(grouped_accuracy)
@@ -56,10 +55,9 @@ def eval_multiple_choice_gpt(df):
     print(f"Total Accuracy: {total_accuracy:.4f}")
 
     # Step 4: Report group by question_type
-    accuracy_report = df.groupby("question_type")["is_correct"].mean()
-    print(accuracy_report)
-
     if "question_type" in df.columns:
+        accuracy_report = df.groupby("question_type")["is_correct"].mean()
+        print(accuracy_report)
         df["prefix"] = df["question_type"].apply(lambda x: x[0])
         grouped_accuracy = df.groupby("prefix")["is_correct"].mean()
         print(grouped_accuracy)

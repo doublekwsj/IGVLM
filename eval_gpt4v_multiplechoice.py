@@ -60,7 +60,7 @@ def infer_and_eval_model(args):
     )
     df_merged, path_df_merged = gpt4vPipeline.do_pipeline()
 
-    print("llava prediction result : " + path_df_merged)
+    print("gpt4 prediction result : " + path_df_merged)
     print("start multiple-choice evaluation")
 
     eval_multiple_choice_gpt(df_merged)
