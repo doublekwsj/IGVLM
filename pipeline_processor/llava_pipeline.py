@@ -118,7 +118,7 @@ class LlavaPipeline:
             raise Exception("not valid qa files")
 
     def _make_directory(self, extra_dir):
-        self.path_result = self.path_dir + extra_dir
+        self.path_result = os.path.join(self.path_dir, extra_dir)
         os.makedirs(self.path_result, exist_ok=True)
 
     def merge_qa_and_answer(self):
