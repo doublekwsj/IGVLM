@@ -47,7 +47,6 @@ def infer_and_eval_model(args):
         path_qa,
         path_video,
         dir=path_result_dir,
-        path_video_file_format=path_video,
     )
     llavaPipeline.set_component(
         user_prompt,
