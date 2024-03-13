@@ -18,7 +18,7 @@ def eval_gpt3(df_merged, path_result, api_key, gpt_eval_type=EvaluationType.DEFA
             row, path_result, api_key, gpt_eval_type=gpt_eval_type
         )
 
-    result_path = os.path.join([path_result, "result.csv"])
+    result_path = os.path.join(path_result, "result.csv")
 
     if not os.path.exists(result_path):
         df_qa, path_merged = merge_qa_and_answer(df_merged, path_result)
@@ -57,7 +57,7 @@ def merge_qa_and_answer(df_qa, path_result):
     df_qa["gpt3_score"] = None
 
     for idx, row in df_qa.iterrows():
-        file_path_saved = os.path.join([path_result, str(row["question_id"]) + ".txt"])
+        file_path_saved = os.path.join(path_result, str(row["question_id"]) + ".txt")
 
         if os.path.exists(file_path_saved):
             with open(file_path_saved, "r") as file:
