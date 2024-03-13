@@ -29,15 +29,9 @@ def infer_and_eval_model(args):
     path_video = args.path_video
     path_result_dir = args.path_result
     llm_size = args.llm_size
-    num_core_eval = args.num_core_eval
     api_key = args.api_key
 
     model_name, user_prompt = get_llava_and_prompt(llm_size)
-
-    print(args)
-    print(model_name)
-    print(user_prompt)
-
     frame_fixed_number = 6
 
     print("loading [%s]" % (model_name))
@@ -54,14 +48,14 @@ def infer_and_eval_model(args):
     )
     df_merged, path_df_merged = llavaPipeline.do_pipeline()
 
+    print("llava prediction result : " + path_df_merged)
     print("start gpt3-evaluation")
 
     gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation")
 
     df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key)
 
-    print("final file path : " + path_merged)
-    print(df_qa.head())
+    print("Gpt-3-evaluation file : " + path_merged)
     yes_count = df_qa[df_qa["gpt3_pred"] == "yes"].shape[0]
     score = df_qa["gpt3_score"].mean()
 
@@ -76,10 +70,10 @@ def validate_llm_size(type_llm_size):
 
 
 def validate_video_path(filename):
-    pattern = r"^%s\.(avi|mp4|mkv|gif)$"  # %s.avi 또는 %s.mp4 형식을 따르는지 확인하는 정규 표현식
-    if not re.match(pattern % filename, filename):
+    pattern = r"\.(avi|mp4|mkv|gif|webm)$"  # %s.avi 또는 %s.mp4 형식을 따르는지 확인하는 정규 표현식
+    if not re.search(pattern, filename):
         raise argparse.ArgumentTypeError(
-            f"No valid video path. You must include %s and the extension of video file."
+            f"No valid video path. You must include %s and the extension of video file. (e.g., /tmp/%s.mp4)"
         )
     return filename
 
@@ -94,7 +88,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--path_video",
-        type=str,
+        type=validate_video_path,
         required=True,
         metavar="/tmp/%s.mp4",
         help="path of video files. You must include string format specifier and the extension of video file.",
@@ -110,12 +104,6 @@ if __name__ == "__main__":
         help="You can choose llm size of LLaVA. 7b | 13b | 34b",
     )
 
-    parser.add_argument(
-        "--num_core_eval",
-        type=int,
-        default=5,
-        help="the number of core for gpt3 evaluation",
-    )
     parser.add_argument(
         "--api_key",
         type=str,
