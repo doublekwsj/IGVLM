@@ -14,7 +14,7 @@ from evaluation.gpt3_evaluation_utils import *
 
 
 def get_prompt():
-    system_prompt = "Answer brief and concise one sentence to the question."
+    system_prompt = ""
     user_prompt = "The provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s?"
     return system_prompt, user_prompt
 

@@ -39,7 +39,11 @@ class GPT4Inference(BaseModelInference):
     def _make_payload(self):
         return {
             "model": "gpt-4-vision-preview",
-            "messages": [self._make_system_prompt(), self._make_user_prompt()],
+            "messages": [
+                self._make_system_prompt(),
+                self._make_user_prompt(),
+                {"role": "assistant", "content": ["In the video,"]},
+            ],
             "max_tokens": self.max_tokens,
         }
 
