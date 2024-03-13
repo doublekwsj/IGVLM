@@ -29,7 +29,6 @@ def infer_and_eval_model(args):
     path_video = args.path_video
     path_result_dir = args.path_result
     llm_size = args.llm_size
-    api_key = args.api_key
 
     model_name, user_prompt = get_llava_and_prompt(llm_size)
     frame_fixed_number = 6
@@ -122,12 +121,6 @@ if __name__ == "__main__":
         help="You can choose llm size of LLaVA. 7b | 13b | 34b",
     )
 
-    parser.add_argument(
-        "--api_key",
-        type=str,
-        required=True,
-        help="api key for gpt-3 evaluation",
-    )
     args = parser.parse_args()
 
     infer_and_eval_model(args)
