@@ -51,7 +51,7 @@ def infer_and_eval_model(args):
     print("Score : %s" % (str(score)))
 
 
-def get_prompt(llm_size):
+def get_prompt():
     user_prompt = "USER: <img><Image></img>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? \nAnswer: In the video,"
     return user_prompt
 
