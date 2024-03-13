@@ -13,9 +13,10 @@ def eval_multiple_choice(df):
     accuracy_report = df.groupby("question_type")["is_correct"].mean()
     print(accuracy_report)
 
-    df["prefix"] = df["question_type"].apply(lambda x: x[0])
-    grouped_accuracy = df.groupby("prefix")["is_correct"].mean()
-    print(grouped_accuracy)
+    if "question_type" in df.columns:
+        df["prefix"] = df["question_type"].apply(lambda x: x[0])
+        grouped_accuracy = df.groupby("prefix")["is_correct"].mean()
+        print(grouped_accuracy)
 
 
 def map_prediction_to_answer_v2(row):
