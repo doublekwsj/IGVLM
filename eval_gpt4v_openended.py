@@ -8,7 +8,6 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from vision_processor.fps_gridview_processor import *
-
 from pipeline_processor.gpt4_pipeline import *
 from evaluation.gpt3_evaluation_utils import *
 

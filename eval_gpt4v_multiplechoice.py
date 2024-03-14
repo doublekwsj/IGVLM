@@ -22,7 +22,7 @@ def infer_and_eval_model(args):
     system_prompt, user_prompt = get_prompt()
     frame_fixed_number = 6
 
-    # NExT-QA, TVQA, IntentQA, EgoSchema
+    # In case of NExT-QA, TVQA, IntentQA and EgoSchema, These has five options on multiple-choice
     func_user_prompt = lambda prompt, row: prompt % (
         row["question"],
         row["a0"],
@@ -32,7 +32,7 @@ def infer_and_eval_model(args):
         row["a4"],
     )
 
-    # In case of STAR benchamrk, use the following codes and select prompt according to llm size.
+    # In case of STAR benchamrk, with four options on multiple-choice, please use the following codes and select prompt according to llm size.
     """
     func_user_prompt = lambda prompt, row: prompt % (
         row["question"],

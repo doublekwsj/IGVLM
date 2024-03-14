@@ -8,7 +8,8 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from vision_processor.fps_gridview_processor import *
-from pipeline_processor.cogagent_pipeline import *
+
+from pipeline_processor.gpt4_pipeline import *
 from evaluation.gpt3_evaluation_utils import *
 
 
@@ -18,28 +19,50 @@ def infer_and_eval_model(args):
     path_result_dir = args.path_result
     api_key = args.api_key
 
-    user_prompt = get_prompt()
+    system_prompt, user_prompt = get_prompt()
     frame_fixed_number = 6
 
-    print("loading CogAgent")
+    print("loading model")
 
-    cogagentPipeline = CogagentPipeline(
+    gpt4vPipeline = Gpt4Pipeline(
         path_qa,
         path_video,
         dir=path_result_dir,
     )
-    cogagentPipeline.set_component(
+    gpt4vPipeline.set_component(
+        api_key,
+        system_prompt,
         user_prompt,
         frame_fixed_number=frame_fixed_number,
     )
-    df_merged, path_df_merged = cogagentPipeline.do_pipeline()
+    df_merged, path_df_merged = gpt4vPipeline.do_pipeline()
 
-    print("cogagent prediction result : " + path_df_merged)
+    print("GPT-4V prediction result : " + path_df_merged)
     print("start gpt3-evaluation")
 
     gpt3_dir = os.path.join(path_result_dir, "results_gpt3_evaluation")
 
-    df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key)
+    # Correctness Information(CI) Evaluation on Text Genearation Performance
+    df_qa, path_merged = eval_gpt3(
+        df_merged, gpt3_dir, api_key, gpt_eval_type=EvaluationType.CORRECTNESS
+    )
+
+    """
+    Text Generation Benchmark has five evaluations. CI(Correctness Information), DO(Detailed Orientation), CU(Context Understanding), TU(Temporal Understanding), CO(Consistency) 
+    
+    In case of Do, Please use the following. 
+    # df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key, gpt_eval_type=EvaluationType.DETAILED_ORIENTATION)
+    
+    In case of CU, Please use the following. 
+    # df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key, gpt_eval_type=EvaluationType.CONTEXT)
+    
+    In case of TU, Please use the following. 
+    # df_qa, path_merged = eval_gpt3(df_merged, gpt3_dir, api_key, gpt_eval_type=EvaluationType.TEMPORAL)
+    
+    In case of CO, we need to evaluate llava twice on two questions. Then, Please use the following
+    # df_qa, path_merged = eval_gpt3_consistency(df_merged1, df_merged2, gpt3_dir, api_key)
+    
+    """
 
     print("Gpt-3-evaluation file : " + path_merged)
     yes_count = df_qa[df_qa["gpt3_pred"] == "yes"].shape[0]
@@ -50,8 +73,9 @@ def infer_and_eval_model(args):
 
 
 def get_prompt():
-    user_prompt = "USER: <img><Image></img>\nThe provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s? \nAnswer: In the video,"
-    return user_prompt
+    system_prompt = ""
+    user_prompt = "The provided image arranges keyframes from a video in a grid view. Answer concisely with overall content and context of the video, highlighting any significant events, characters, or objects that appear throughout the frames. Question: %s?"
+    return system_prompt, user_prompt
 
 
 def validate_video_path(filename):
@@ -86,7 +110,7 @@ if __name__ == "__main__":
         "--api_key",
         type=str,
         required=True,
-        help="api key for gpt-3 evaluation",
+        help="api key for gpt-4v and gpt-3 evaluation",
     )
     args = parser.parse_args()
 
