@@ -11,8 +11,8 @@ Stimulated by the sophisticated reasoning capabilities of recent Large Language 
 
 
 ## Inference and Evaluation
-we provide code that enables the replication of our experiments with LLaVA v1.6 configurations of 7b/13b/34b applied to GPT-4V using the IG-VLM approach. For each VLM, we offer files that facilitate experimentation across various benchmarks:Open-ended Video Question Answering (VQA) with datasets such as MSVD-QA, MSRVTT-QA, ActivityNet-QA, and TGIF-QA, Text Generation Performance VQA for CI, DO, CU, TU, and CO, Multiple-choice VQA benchmarks including NExT-QA, STAR, TVQA, IntentQA, and EgoSchema.
- * To conduct these benchmark experiments, please prepare Data Download and a QA pair sheet. 
+We provide code that enables the reproduction of our experiments with LLaVA v1.6 7b/13b/34b and GPT-4V using the IG-VLM approach. For each VLM, we offer files that facilitate experimentation across various benchmarks:Open-ended Video Question Answering (VQA) with datasets such as MSVD-QA, MSRVTT-QA, ActivityNet-QA, and TGIF-QA, Text Generation Performance VQA for CI, DO, CU, TU, and CO, Multiple-choice VQA including NExT-QA, STAR, TVQA, IntentQA, and EgoSchema.
+ * To conduct these benchmark experiments, please prepare data download and a QA pair sheet. 
  * The QA pair sheet should follow the format outlined below and must be converted into a CSV file for use.
  * For experimenting with LLaVA v1.6 with IG-VLM, the following command can be used. The llm_size parameter allows the selection among the 7b, 13b, and 34b model configurations:
  ```bash
@@ -27,7 +27,7 @@ we provide code that enables the replication of our experiments with LLaVA v1.6 
  # Multiple-choice VQA (NExT-QA, STAR, TVQA, IntentQA and EgoSchema)
  python eval_llava_textgeneration_openended.py --path_qa_pair_csv ./data/text_generation_benchmark/generic_qa.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_textgeneration/ --api_key {api_key} --llm_size 34b
  ```
- * GPT-4V with IG-VLM을 실험하는 경우, 아래와 같은 명령어로 진행할 수 있다. gpt4 vision api를 사용하기 때문에, 비용이 많이 발생할 수 있다. 
+ * When conducting experiments with GPT-4V combined with IG-VLM, the process can be initiated using the following command. Please be aware that utilizing the GPT-4 vision API may incur significant costs. 
  ```bash
  # Open-ended video question answering (MSVD-QA, MSRVTT-QA, ActivityNet-QA and TGIF-QA)
  python eval_gpt4v_openended.py --path_qa_pair_csv ./data/openended_qa/msvd_qa.csv --path_video /data/msvd/videos/%s.avi --path_result ./result_activitynet_gpt4/ --api_key {api_key}
