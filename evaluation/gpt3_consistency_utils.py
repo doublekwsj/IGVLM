@@ -9,63 +9,22 @@ import mlflow
 import pandas as pd
 
 
-def gpt3_consistency_parallel_processing(
-    df_merged1, df_merged2, path_result, num_core, api_key
-):
-    # 프로세스 풀 실행자를 사용하여 작업 분할
-    print("input : " + str(len(df_merged1)))
-    print("path : " + path_result)
-    print("core : " + str(num_core))
+def eval_gpt3_consistency(df_merged1, df_merged2, path_result, api_key):
 
     os.makedirs(path_result, exist_ok=True)
 
-    if not os.path.exists(path_result + "result.csv"):
+    for (idx1, row1), (idx2, row2) in zip(df_merged1.iterrows(), df_merged2.iterrows()):
+        process_gpt3_evaluation_consistency(row1, row2, path_result, api_key)
 
-        with ProcessPoolExecutor(max_workers=num_core) as executor:
-            futures = [
-                executor.submit(
-                    process_gpt3_evaluation_consistency,
-                    row1,
-                    row2,
-                    path_result,
-                    api_key,
-                )
-                for (idx1, row1), (idx2, row2) in zip(
-                    df_merged1.iterrows(), df_merged2.iterrows()
-                )
-            ]
+    result_path = os.path.join(path_result, "result.csv")
 
-            # 진행 상태를 tqdm으로 표시
-            for _ in tqdm(
-                concurrent.futures.as_completed(futures), total=len(df_merged1)
-            ):
-                pass
-        with ProcessPoolExecutor(max_workers=num_core) as executor:
-            futures = [
-                executor.submit(
-                    process_gpt3_evaluation_consistency,
-                    row1,
-                    row2,
-                    path_result,
-                    api_key,
-                )
-                for (idx1, row1), (idx2, row2) in zip(
-                    df_merged1.iterrows(), df_merged2.iterrows()
-                )
-            ]
-
-            # 진행 상태를 tqdm으로 표시
-            for _ in tqdm(
-                concurrent.futures.as_completed(futures), total=len(df_merged1)
-            ):
-                pass
+    if not os.path.exists(result_path):
         df_qa, path_merged = merge_qa_and_answer_consistency(
             df_merged1, df_merged2, path_result
         )
         return df_qa, path_merged
-
     else:
-        path_merged_already = path_result + "result.csv"
+        path_merged_already = result_path
         df_already = pd.read_csv(path_merged_already, index_col=0)
         return df_already, path_merged_already
 

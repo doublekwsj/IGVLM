@@ -115,7 +115,7 @@ def make_messages(question, answer, pred, gpt_eval_type):
                 "For example, your response should look like this: {'pred': 'yes', 'score': 4.8}.",
             },
         ]
-    elif gpt_eval_type == EvaluationType.CORRECTNESS:  # correctness
+    elif gpt_eval_type == EvaluationType.CORRECTNESS:
         return [
             {
                 "role": "system",
@@ -140,7 +140,7 @@ def make_messages(question, answer, pred, gpt_eval_type):
                 "For example, your response should look like this: {''score': 4.8}.",
             },
         ]
-    elif gpt_eval_type == EvaluationType.DETAILED_ORIENTATION:  # detailed orientation
+    elif gpt_eval_type == EvaluationType.DETAILED_ORIENTATION:
         return [
             {
                 "role": "system",
@@ -165,7 +165,7 @@ def make_messages(question, answer, pred, gpt_eval_type):
                 "For example, your response should look like this: {''score': 4.8}.",
             },
         ]
-    elif gpt_eval_type == EvaluationType.CONTEXT:  # context
+    elif gpt_eval_type == EvaluationType.CONTEXT:
         return [
             {
                 "role": "system",
@@ -190,7 +190,7 @@ def make_messages(question, answer, pred, gpt_eval_type):
                 "For example, your response should look like this: {''score': 4.8}.",
             },
         ]
-    elif gpt_eval_type == EvaluationType.TEMPORAL:  # temporal
+    elif gpt_eval_type == EvaluationType.TEMPORAL:
         return [
             {
                 "role": "system",
