@@ -55,37 +55,3 @@ class GridViewCreator(BasePostProcessor):
     def _get_frame_number(self, file_path):
         numbers = file_path.split("/")[-1].split(".")[0]
         return int(numbers) if numbers else -1
-
-
-def main():
-    video_name = "rlQ2kW-FvMk_66_79.mp4"
-    tmp = FpsExtractor(["example", video_name])
-    print(tmp.video_path)
-
-    npy_image = tmp.save_data_based_on_option(
-        SaveOption.NUMPY,
-        interval=5,
-        has_condition=False,
-        condition_list=[],
-        condition_interval=[],
-    )
-
-    calculate_rounded_sqrt = lambda x: round(math.sqrt(x))
-    grid_view_creator = GridViewCreator(calculate_rounded_sqrt)
-
-    # create image as files and save it.
-    image_array_rgb = grid_view_creator.post_process_based_on_options(
-        SaveOption.IMAGE, npy_image
-    )
-    image_array_rgb.save("./imagegrid_sample/%s.jpg" % (video_name.split(".")[0]))
-
-    # create image as base64 encoding
-    image_base64 = grid_view_creator.post_process_based_on_options(
-        SaveOption.BASE64, npy_image
-    )
-
-    print(image_base64)
-
-
-if __name__ == "__main__":
-    main()

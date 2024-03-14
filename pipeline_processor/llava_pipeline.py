@@ -147,16 +147,3 @@ class LlavaPipeline:
             self.df_qa = pd.read_csv(path_merged, index_col=0)
 
         return self.df_qa, path_merged
-
-    def reset_pipeline(
-        self, path_qa, path_video_file_format, dir="./llava_pipeline_result/"
-    ):
-        self.path_qa = path_qa
-        self.path_video_file_format = path_video_file_format
-        self.path_dir = dir
-        self.path_result = dir
-        self.make_video_file_list()
-
-        extra_dir = "ffn=%s" % (str(self.frame_fixed_number),)
-
-        self._make_directory(extra_dir)

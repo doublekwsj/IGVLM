@@ -43,14 +43,13 @@ class FpsDataProcessor:
         return rlt_grid_view_creator
 
 
-# 예시 사용
 def main():
 
     video_name = "rlQ2kW-FvMk_66_79.mp4"
 
     fps_data_processor = FpsDataProcessor(
         save_option=SaveOption.IMAGE,
-        frame_fixed_number=12,
+        frame_fixed_number=6,
     )
     print(vars(fps_data_processor))
     rlt = fps_data_processor.process(["example", video_name])
