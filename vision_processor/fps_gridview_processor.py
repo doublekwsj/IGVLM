@@ -56,7 +56,7 @@ def main():
     rlt = fps_data_processor.process(["example", video_name])
     print(rlt)
 
-    rlt.save("./imagegrid_sample/%s.jpg" % (video_name.split(".")[0]))
+    rlt.save("./example/imagegrid_sample/%s.jpg" % (video_name.split(".")[0]))
 
 
 if __name__ == "__main__":

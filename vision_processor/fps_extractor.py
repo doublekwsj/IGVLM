@@ -84,7 +84,7 @@ def main():
     print(tmp.video_path)
     tmp.save_data_based_on_option(
         SaveOption.FILE,
-        filename="extraction_sample/ysTmUTQ5wZE_17_45/",
+        filename="/example/extraction_sample/ysTmUTQ5wZE_17_45/",
         frame_fixed_number=6,
     )
 
