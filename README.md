@@ -16,8 +16,8 @@ We provide code that enables the reproduction of our experiments with LLaVA v1.6
  * The QA pair sheet should follow the format outlined below and must be converted into a CSV file for use.
  ```bash
  # for open-ended QA sheet, it should include video_name, question, answer, question_id and question_type(optional)
- # for multiple-choice QA sheet, it should include video_name, question, options(a0, a1, a2, .. ), answer and question_type(optional).
- # question_id should be unique-id 
+ # for multiple-choice QA sheet, it should include video_name, question, options(a0, a1, a2, .. ), answer, question_id and question_type(optional).
+ # question_id should be unique.
 
  # example of multeple-choice QA
  | video_name | question_id |                        question                       |       a0      |      a1     |    a2    |        a3      |        a4       |   answer   | question_type(optional) | 
