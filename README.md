@@ -18,22 +18,27 @@ Stimulated by the sophisticated reasoning capabilities of recent Large Language 
  ```bash
  # Open-ended video question answering (MSVD-QA, MSRVTT-QA, ActivityNet-QA and TGIF-QA)
  python eval_llava_openended.py --path_qa_pair_csv ./data/openended_qa/activitynet.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_activitynet/ --api_key {api_key}
- 
+ ```
+ ```bash
  # Text generation performance (CI, DO, CU, TU and CO)
  python eval_llava_multiplechoice.py --path_qa_pair_csv ./data/multiple_choice/tvqa.csv --path_video /data/TVQA/videos/%s.mp4 --path_result ./result_tvqa/
-
+ ```
+ ```bash
  # Multiple-choice VQA (NExT-QA, STAR, TVQA, IntentQA and EgoSchema)
  python eval_llava_textgeneration_openended.py --path_qa_pair_csv ./data/text_generation_benchmark/generic_qa.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_textgeneration/ --api_key {api_key}
  ```
  * GPT-4V with IG-VLM을 실험하는 경우, 아래와 같은 명령어로 진행할 수 있다. gpt4 vision api를 사용하기 때문에, 비용이 많이 발생할 수 있다. 
  ```bash
  # Open-ended video question answering (MSVD-QA, MSRVTT-QA, ActivityNet-QA and TGIF-QA)
- !python eval_gpt4v_openended.py --path_qa_pair_csv ./data/openended_qa/msvd_qa.csv --path_video /data/msvd/videos/%s.avi --path_result ./result_activitynet_gpt4/ --api_key {api_key}
-
+ python eval_gpt4v_openended.py --path_qa_pair_csv ./data/openended_qa/msvd_qa.csv --path_video /data/msvd/videos/%s.avi --path_result ./result_activitynet_gpt4/ --api_key {api_key}
+ ```
+ ```bash
  # Text generation performance (CI, DO, CU, TU and CO)
  python eval_gpt4v_textgeneration_openended.py --path_qa_pair_csv ./data/text_generation_benchmark/generic_qa.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_textgeneration_gpt4/ --api_key {api_key}
-
+ ```
+ ```bash
  # Multiple-choice VQA (NExT-QA, STAR, TVQA, IntentQA and EgoSchema)
  python eval_gpt4v_multiplechoice.py --path_qa_pair_csv ./data/multiple_choice_qa/EgoSchema.csv --path_video /data/EgoSchema/videos/%s.mp4 --path_result ./result_egoschema_gpt4/ --api_key {api_key}
+ ```
 ```
 
