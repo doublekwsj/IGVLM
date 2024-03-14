@@ -15,11 +15,16 @@ We provide code that enables the reproduction of our experiments with LLaVA v1.6
  * To conduct these benchmark experiments, please prepare data download and a QA pair sheet. 
  * The QA pair sheet should follow the format outlined below and must be converted into a CSV file for use.
  ```bash
- | Column1 | Column2 | Column3 |
-|---------|---------|---------|
-| Row1    | Data1   | Data2   |
-| Row2    | Data3   | Data4   |
-| Row3    | Data5   | Data6   |
+ # for open-ended QA sheet, it should include video_name, question, answer, question_id and question_type(optional)
+ # for multiple-choice QA sheet, it should include video_name, question, options(a0, a1, a2, .. ), answer and question_type(optional).
+ # question_id should be unique-id 
+
+ # example of multeple-choice QA
+ | video_name | question_id |question | a0 | a1 | a2 | a3 | a4 | answer | question_type(optional) | 
+|---------|---------|---------|---------|---------|---------|---------|---------|---------|
+| 5333075105    |unique1234| what did the man do after he reached the cameraman?   | play with toy   |inspect wings|stop|move to the side|pick up something|stop|TN|
+| Row2    |unique4231| Data3   | Data4   |inspect wings|stop|move to the side|pick up something|stop|TN|
+| Row3    |unique5231| Data5   | Data6   |inspect wings|stop|move to the side|pick up something|stop|TN|
 ```
 
  * For experimenting with LLaVA v1.6 with IG-VLM, the following command can be used. The llm_size parameter allows the selection among the 7b, 13b, and 34b model configurations:
