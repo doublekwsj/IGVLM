@@ -21,7 +21,7 @@ We provide code that enables the reproduction of our experiments with LLaVA v1.6
 
  # example of multeple-choice QA
  | video_name | question_id |                        question                       |       a0      |      a1     |    a2    |        a3      |        a4       |   answer   | question_type(optional) | 
- |------------|-------------|-------------------------------------------------------|---------------|-------------|----------|----------------|---------------|----------------|-----------|--------------------|
+ |------------|-------------|-------------------------------------------------------|---------------|-------------|----------|----------------|---------------|------------------|---------|----------------|
  | 5333075105 | unique1234  | what did the man do after he reached the cameraman?   | play with toy |inspect wings|   stop   |move to the side|pick up something|    stop    |         TN              |
  ...
 ```
