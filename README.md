@@ -10,3 +10,17 @@ Stimulated by the sophisticated reasoning capabilities of recent Large Language 
 * Please make sure that pytorch version to reproduce our results. 
 
 
+## Inference and Evaluation
+ 논문에서 실험한 LLaVA v1.6 7b/13b/34b, GPT-4V에 IG-VLM을 적용해서, 결과를 재현할 수 있는 코드를 제공한다. 각 모델별로 open-ended VQA(MSVD-QA, MSRVTT-QA, ActivityNet-QA, TGIF-QA), Text Generation Performance VQA(CI, DO, CU, TU, CO), multiple-choice VQA (NExT-QA, STAR, TVQA, EgoSchema, IntentQA)를 실험할 수 있는 파일이 각 기 제공된다. 
+ * 각 Benchmark 실험을 위해 Data Download와 QA pair sheet를 준비한다. 
+ * 이때, QA pair sheet는 아래와 같은 format을 가지며, csv파일로 변환해야 한다. 
+ * LLaVA v1.6 with IG-VLM을 실험하는 경우, 아래와 같은 명령어로 진행할 수 있다. llm_size parameter를 이용해 7b, 13b, 34b 모델 중 하나를 선택할 수 있다.
+ ```bash
+ python eval_llava_openended.py --path_qa_pair_csv ./data/openended_qa/activitynet.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_activitynet/ --api_key {api_key}
+
+ python eval_llava_multiplechoice.py --path_qa_pair_csv ./data/multiple_choice/tvqa.csv --path_video /data/TVQA/videos/%s.mp4 --path_result ./result_tvqa/
+
+ python eval_llava_textgeneration_openended.py --path_qa_pair_csv ./data/text_generation_benchmark/generic_qa.csv --path_video /data/activitynet/videos/%s.mp4 --path_result ./result_textgeneration/ --api_key {api_key}
+ ```
+ * GPT-4V with IG-VLM을 실험하는 경우, 아래와 같은 명령어로 진행할 수 있다. vision api를 사용하기 때문에, 비용이 많이 발생할 수 있다. 
+
