@@ -14,6 +14,14 @@ Stimulated by the sophisticated reasoning capabilities of recent Large Language 
 We provide code that enables the reproduction of our experiments with LLaVA v1.6 7b/13b/34b and GPT-4V using the IG-VLM approach. For each VLM, we offer files that facilitate experimentation across various benchmarks:Open-ended Video Question Answering (VQA) with datasets such as MSVD-QA, MSRVTT-QA, ActivityNet-QA, and TGIF-QA, Text Generation Performance VQA for CI, DO, CU, TU, and CO, Multiple-choice VQA including NExT-QA, STAR, TVQA, IntentQA, and EgoSchema.
  * To conduct these benchmark experiments, please prepare data download and a QA pair sheet. 
  * The QA pair sheet should follow the format outlined below and must be converted into a CSV file for use.
+ ```bash
+ | Column1 | Column2 | Column3 |
+|---------|---------|---------|
+| Row1    | Data1   | Data2   |
+| Row2    | Data3   | Data4   |
+| Row3    | Data5   | Data6   |
+```
+
  * For experimenting with LLaVA v1.6 with IG-VLM, the following command can be used. The llm_size parameter allows the selection among the 7b, 13b, and 34b model configurations:
  ```bash
  # Open-ended video question answering (MSVD-QA, MSRVTT-QA, ActivityNet-QA and TGIF-QA)
